@@ -1,0 +1,28 @@
+:root {
+  --bg-main: #e8e8e8;
+  --bg-main-darkT: #6d6d6d;
+  --bg-second-darkT: #3c3c3c;
+  --main-color: #b21988;
+  --main-color-alpha: rgba(255, 0, 185, 0.1);
+  --main-color-light: #fea7e6;
+  --main-color-hovered: #931370;
+  --hovered-secondary: #faeef7;
+  --second-text-color: #5e5e5e;
+  --second-text-color-darkT: #d8d8d8;
+  --text-color-darkT: #ecebeb;
+}
+
+/* Font faces */
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: bold;
+}
