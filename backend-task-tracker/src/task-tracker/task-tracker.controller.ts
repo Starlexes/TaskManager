@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { TaskTrackerService } from './task-tracker.service';
 import { Task } from './task-tracker.schema';
-import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { UpdateTask } from './types/task-tracker.interface';
 
 @Controller('tasks')

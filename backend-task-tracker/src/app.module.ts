@@ -1,8 +1,20 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TaskTrackerModule } from './task-tracker/task-tracker.module';
+import { TypegooseModule } from 'nestjs-typegoose';
+import { getMongoConfig } from './configs/mongo.config';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost:27017/task-manager'), TaskTrackerModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypegooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getMongoConfig,
+    }),
+    TaskTrackerModule,
+  ],
 })
 export class AppModule {}
