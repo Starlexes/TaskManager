@@ -37,10 +37,13 @@ const props = defineProps({
 
 const taskFinishDate = ref<string | null>(props.taskFinishDate);
 
-const onDayClick = (day: string) => {
-  const date = new Date(day).setUTCHours(0, 0, 0, 0);
-
-  emit('update-date', new Date(date));
+const onDayClick = (day: string | null) => {
+  if (day) {
+    const date = new Date(day).setUTCHours(0, 0, 0, 0);
+    emit('update-date', new Date(date));
+  } else {
+    emit('update-date', day);
+  }
 };
 
 const formatDate = (date: Date) => {
