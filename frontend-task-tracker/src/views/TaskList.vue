@@ -11,11 +11,7 @@
         v-for="task in tasks"
         :key="task._id"
         :taskId="task._id"
-        :title="task.title"
-        :category="task.category"
-        :createdAt="task.createdAt"
-        :finish-date="task.finishDate ? task.finishDate : undefined"
-        :completed="task.completed"
+        :task="task as Omit<Task, '_id'>"
       />
     </ul>
   </template>

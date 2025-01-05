@@ -10,18 +10,15 @@
 <script setup lang="ts">
 import { newTaskTitle, newTaskCategory } from '@/constants/newTaskData.constants';
 import ThePlus from '@/icons/ThePlus.vue';
-import type { UpdateTask } from '@/types/UpdateTask.type';
+import type { Task } from '@/types/Task.interface';
 import { useStore } from 'vuex';
 
 const store = useStore();
 
 const addNewTask = async () => {
-  const count = store.getters.countTasks;
-  const countTasks = count ? count + 1 : (store.getters.tasksLength as number) + 1;
-  const newTask: UpdateTask = {
-    title: `${newTaskTitle} ${countTasks}`,
+  const newTask: Omit<Task, '_id'> = {
+    title: `${newTaskTitle}`,
     category: newTaskCategory,
-    finishDate: null,
     completed: false,
   };
   store.dispatch('createTask', newTask);

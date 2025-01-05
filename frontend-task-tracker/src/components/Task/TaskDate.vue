@@ -31,11 +31,10 @@ const theme = computed<State['currentTheme']>(() => store.getters.theme);
 const props = defineProps({
   taskFinishDate: {
     type: [String, null],
-    required: true,
   },
 });
 
-const taskFinishDate = ref<string | null>(props.taskFinishDate);
+const taskFinishDate = ref<string | null>(props.taskFinishDate? props.taskFinishDate : null);
 
 const onDayClick = (day: string | null) => {
   if (day) {

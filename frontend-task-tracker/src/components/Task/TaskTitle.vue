@@ -22,14 +22,9 @@
 <script setup lang="ts">
 import type { Task } from '@/types/Task.interface';
 import { ref } from 'vue';
-import { useStore } from 'vuex';
-const store = useStore();
+const emit = defineEmits(['update-title']);
 const props = defineProps({
   taskTitle: {
-    type: String,
-    required: true,
-  },
-  taskId: {
     type: String,
     required: true,
   },
@@ -37,7 +32,6 @@ const props = defineProps({
 const isEditable = ref<boolean>(false);
 const taskTitle = ref<Task['title']>(props.taskTitle);
 const originalTaskTitle = ref<Task['title']>(props.taskTitle);
-const taskId = ref<Task['_id']>(props.taskId);
 
 const changeEditable = () => {
   isEditable.value = !isEditable.value;
@@ -51,12 +45,11 @@ const onBlur = () => {
   changeEditable();
   const title = taskTitle.value;
   if (title) {
-    store.dispatch('updateTask', {
-      taskId: taskId.value,
-      data: {
-        title: title,
-      },
-    });
+    const data: Partial<Omit<Task, '_id'>> = {
+      title,
+    };
+
+    emit('update-title', data);
   } else {
     taskTitle.value = originalTaskTitle.value;
   }

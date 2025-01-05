@@ -3,11 +3,11 @@
     <div
       class="tw-flex tw-flex-col tw-gap-3 tw-p-8 tw-bg-white dark:tw-bg-[var(--bg-second-darkT)] tw-w-[28em] tw-relative task-item"
     >
-      <CompleteTaskLabel v-if="taskCompleted" />
+      <CompleteTaskLabel v-if="task.completed" />
       <div class="tw-flex tw-flex-col tw-gap-2 tw-relative">
-        <TaskTitle :taskId="taskId" :taskTitle="taskTitle" />
-        <TaskCategory :taskId="taskId" :taskCategory="taskCategory" />
-        <CompleteTaskButton :isChecked="taskCompleted" @btn-clicked="onClickComplete" />
+        <TaskTitle :taskTitle="task.title" @update-title="updateTask" />
+        <TaskCategory :taskCategory="task.category" @update-category="updateTask" />
+        <CompleteTaskButton :isChecked="task.completed" @btn-clicked="onClickComplete" />
       </div>
       <hr class="tw-m-0 dark:tw-border-t-[var(--second-text-color-darkT)]" />
       <div class="tw-flex tw-justify-between">
@@ -16,7 +16,7 @@
         >
           <div class="tw-flex tw-gap-2 tw-items-center">
             <span class="tw-text-base dark:tw-text-[var(--second-text-color-darkT)]">Дэдлайн:</span>
-            <TaskDate :taskFinishDate="taskFinishDate" @update-date="updateDate" />
+            <TaskDate :taskFinishDate="task.finishDate" @update-date="updateDate" />
           </div>
         </div>
         <button
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, type PropType } from 'vue';
 import { Store, useStore } from 'vuex';
 import TheBucket from '@/icons/TheBucket.vue';
 import AskDeleteModal from '../AskDeleteModal.vue';
@@ -52,67 +52,49 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  title: {
-    type: String,
+  task: {
+    type: Object as PropType<Omit<Task, '_id'>>,
     required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  completed: {
-    type: Boolean,
-    required: true,
-  },
-  createdAt: {
-    type: String,
-  },
-  finishDate: {
-    type: String,
-    default: null,
   },
 });
 const store = useStore<Store<State>>();
 const taskId = ref<string>(props.taskId);
-const taskTitle = ref<string>(props.title);
-const taskCategory = ref<string>(props.category);
-const taskCompleted = ref<boolean>(props.completed);
-const taskFinishDate = ref<Task['finishDate']>(props.finishDate);
+const task = ref<Omit<Task, '_id'>>(props.task);
 
 const updateDate = (pDate: Date | null) => {
-  let date: Task['finishDate'];
+  let date: string | null;
   if (pDate) {
     date = pDate.toISOString();
   } else {
     date = pDate;
   }
-  taskFinishDate.value = date;
-  const payload: UpdateTaskPayload = {
-    taskId: taskId.value,
-    data: {
-      finishDate: date,
-    },
-  };
-  store.dispatch('updateTask', payload);
+  task.value.finishDate = date;
+  const data: Partial<Omit<Task, '_id'>> = { finishDate: date };
+  updateTask(data);
 };
 
 const onClickComplete = () => {
-  taskCompleted.value = !taskCompleted.value;
-  const payload: UpdateTaskPayload = {
-    taskId: taskId.value,
-    data: {
-      completed: taskCompleted.value,
-    },
+  task.value.completed = !task.value.completed;
+  const data: Partial<Omit<Task, '_id'>> = {
+    completed: task.value.completed,
   };
-  store.dispatch('updateTask', payload);
-  if (taskCompleted.value) {
+  updateTask(data);
+  if (task.value.completed) {
     store.commit('incCountCompletedTasks');
   } else store.commit('decCountCompletedTasks');
 };
 
+const updateTask = (data: Partial<Omit<Task, '_id'>>) => {
+  const payload: UpdateTaskPayload = {
+    taskId: taskId.value,
+    data: { ...task.value, ...data },
+  };
+  store.dispatch('updateTask', payload);
+};
+
 const deleteTask = () => {
   store.dispatch('deleteTasks', taskId.value);
-  if (taskCompleted.value) {
+  if (task.value.completed) {
     store.commit('decCountCompletedTasks');
   }
   store.commit('decCountTasks');

@@ -22,15 +22,9 @@
 <script setup lang="ts">
 import type { Task } from '@/types/Task.interface';
 import { ref } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+const emit = defineEmits(['update-category']);
 const props = defineProps({
   taskCategory: {
-    type: String,
-    required: true,
-  },
-  taskId: {
     type: String,
     required: true,
   },
@@ -38,7 +32,6 @@ const props = defineProps({
 const isEditable = ref<boolean>(false);
 const taskCategory = ref<Task['title']>(props.taskCategory);
 const originalTaskCategory = ref<Task['title']>(props.taskCategory);
-const taskId = ref<Task['_id']>(props.taskId);
 
 const changeEditable = () => {
   isEditable.value = !isEditable.value;
@@ -51,12 +44,10 @@ const onBlur = () => {
   changeEditable();
   const category = taskCategory.value;
   if (category) {
-    store.dispatch('updateTask', {
-      taskId: taskId.value,
-      data: {
-        category: taskCategory.value,
-      },
-    });
+    const data: Partial<Omit<Task, '_id'>> = {
+      category,
+    };
+    emit('update-category', data);
   } else {
     taskCategory.value = originalTaskCategory.value;
   }

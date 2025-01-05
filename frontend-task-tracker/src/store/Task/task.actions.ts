@@ -1,18 +1,14 @@
 import type { ActionContext } from 'vuex';
-
 import { useCreateTask } from '@/hooks/useCreateTask';
 import { useDeleteTask } from '@/hooks/useDeleteTask';
 import { useGetTasks } from '@/hooks/useGetTasks';
 import { useSearchTasks } from '@/hooks/useSearchTasks';
 import { useUpdateTask } from '@/hooks/useUpdateTask';
-
-import type { State } from '../index';
-
 import type { Task } from '@/types/Task.interface';
-import type { UpdateTask } from '@/types/UpdateTask.type';
 import type { UpdateTaskPayload } from '@/types/UpdateTaskPayload.interface';
 import { useGetCountTasks } from '@/hooks/useGetCountTasks';
 import adaptFilterParams from '@/utils/adaptFilterParams';
+import type { State } from '../index';
 
 export const taskActions = {
   loadTasks: async (
@@ -65,7 +61,7 @@ export const taskActions = {
     }
   },
 
-  createTask: async ({ commit }: ActionContext<State, State>, data: UpdateTask) => {
+  createTask: async ({ commit }: ActionContext<State, State>, data: Omit<Task, '_id'>) => {
     const response = await useCreateTask(data);
     if (response) {
       const { data, code } = response;
