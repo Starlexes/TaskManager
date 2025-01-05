@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { TaskTrackerService } from './task-tracker.service';
 import { TaskModel } from './task-tracker.model';
-import { UpdateTask } from './types/task-tracker.interface';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Controller('tasks')
 export class TaskTrackerController {
@@ -44,12 +44,12 @@ export class TaskTrackerController {
   }
 
   @Patch(':taskId')
-  async update(@Param('taskId') taskId: UpdateTask['_id'], @Body() task: UpdateTask) {
+  async update(@Param('taskId') taskId: string, @Body() task: CreateTaskDto) {
     return this.taskTrackerService.update(taskId, task);
   }
 
   @Delete(':taskId')
-  async delete(@Param('taskId') taskId: UpdateTask['_id']) {
+  async delete(@Param('taskId') taskId: string) {
     this.taskTrackerService.delete(taskId);
   }
 }

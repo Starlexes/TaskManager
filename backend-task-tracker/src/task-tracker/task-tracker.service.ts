@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UpdateTask } from './types/task-tracker.interface';
 import { RootFilterQuery, Types } from 'mongoose';
-import { TaskModel } from './task-tracker.model';
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types';
 import { getCurrentDate } from '../utils/getCurrentDate';
 import { InjectModel } from 'nestjs-typegoose';
+import { TaskModel } from './task-tracker.model';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Injectable()
 export class TaskTrackerService {
@@ -73,7 +73,7 @@ export class TaskTrackerService {
     return task;
   }
 
-  async getCountTasks(completed?: TaskModel['completed']): Promise<number> {
+  async getCountTasks(completed?: boolean): Promise<number> {
     try {
       const count = await this.taskModel.countDocuments(completed ? { completed } : {});
       return count;
@@ -82,12 +82,12 @@ export class TaskTrackerService {
     }
   }
 
-  async create(task: TaskModel): Promise<DocumentType<TaskModel>> {
+  async create(task: CreateTaskDto): Promise<DocumentType<TaskModel>> {
     task.createdAt = getCurrentDate().toISOString();
-    return this.taskModel.create<DocumentType<TaskModel>>(task);
+    return this.taskModel.create(task);
   }
 
-  async update(taskId: UpdateTask['_id'], task: UpdateTask): Promise<DocumentType<TaskModel>> {
+  async update(taskId: string, task: CreateTaskDto): Promise<DocumentType<TaskModel>> {
     return this.taskModel
       .findByIdAndUpdate<DocumentType<TaskModel>>(taskId, task, { new: true })
       .exec();
