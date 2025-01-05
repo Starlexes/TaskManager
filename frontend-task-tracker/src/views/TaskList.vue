@@ -3,7 +3,7 @@
     <TaskSkeleton v-for="item in 4" :key="item" />
   </div>
   <template v-else>
-    <p v-if="tasks.length === 0" class="tw-text-center tw-text-2xl not-found-message">
+    <p v-if="tasksLength === 0" class="tw-text-center tw-text-2xl not-found-message">
       Tasks was not found
     </p>
     <ul class="tw-flex tw-flex-col tw-gap-8 tw-items-center" v-else>
@@ -33,9 +33,12 @@ import { filterQueryParam } from '@/constants/filterQueryParam.constants';
 const store = useStore();
 
 const route = useRoute();
+
 const filter = ref(route.query[filterQueryParam]);
 
 const tasks = computed((): Task[] => store.getters.tasks);
+
+const tasksLength = computed((): number => store.getters.tasksLength);
 
 const isLoading = ref<boolean>(true);
 

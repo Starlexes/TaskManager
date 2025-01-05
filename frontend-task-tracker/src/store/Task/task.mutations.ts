@@ -7,6 +7,10 @@ export const taskMutations = {
     state.tasks.push(...payload);
   },
 
+  addTask(state: State, payload: Task) {
+    state.tasks.unshift(payload);
+  },
+
   setTasks(state: State, payload: Task[]) {
     state.tasks = payload;
   },
@@ -14,6 +18,10 @@ export const taskMutations = {
   setTask(state: State, payload: UpdateTaskPayload) {
     const { taskId, data } = payload;
     state.tasks.map((task) => task._id === taskId && { ...task, ...data });
+  },
+
+  deleteTask(state: State, taskId: Task['_id']) {
+    state.tasks = state.tasks.filter((task) => task._id !== taskId);
   },
 
   incCountCompletedTasks(state: State) {
@@ -38,13 +46,5 @@ export const taskMutations = {
 
   decCountTasks(state: State) {
     state.countTasks--;
-  },
-
-  addTask(state: State, payload: Task) {
-    state.tasks.unshift(payload);
-  },
-
-  deleteTask(state: State, taskId: Task['_id']) {
-    state.tasks = state.tasks.filter((task) => task._id !== taskId);
   },
 };

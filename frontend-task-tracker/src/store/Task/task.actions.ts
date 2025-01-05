@@ -69,7 +69,11 @@ export const taskActions = {
     const response = await useCreateTask(data);
     if (response) {
       const { data, code } = response;
-      if (code === 201) commit('addTask', data);
+
+      if (code === 201) {
+        commit('addTask', data);
+        commit('incCountTasks');
+      }
     }
   },
 

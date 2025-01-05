@@ -17,16 +17,14 @@ const store = useStore();
 
 const addNewTask = async () => {
   const count = store.getters.countTasks;
-  const countTasks = count ? count + 1 : (store.getters.tasksLengthInc as number);
+  const countTasks = count ? count + 1 : (store.getters.tasksLength as number) + 1;
   const newTask: UpdateTask = {
     title: `${newTaskTitle} ${countTasks}`,
     category: newTaskCategory,
-    createdAt: new Date().toISOString(),
     finishDate: null,
     completed: false,
   };
   store.dispatch('createTask', newTask);
-  store.commit('incCountTasks');
 };
 </script>
 
