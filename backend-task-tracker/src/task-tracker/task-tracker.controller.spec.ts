@@ -3,7 +3,7 @@ import { TaskTrackerController } from './task-tracker.controller';
 import { INestApplication } from '@nestjs/common';
 import { TaskTrackerService } from './task-tracker.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { taskSchema } from './task-tracker.schema';
+import { taskSchema } from './task-tracker.model';
 import { Task } from './types/task-tracker.interface';
 import { DocumentType } from '@typegoose/typegoose/lib/types';
 describe('TaskTrackerController', () => {

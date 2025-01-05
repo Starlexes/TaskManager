@@ -8,6 +8,7 @@ import { getMongoConfig } from './configs/mongo.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '../.env',
     }),
     TypegooseModule.forRootAsync({
       imports: [ConfigModule],

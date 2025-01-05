@@ -1,15 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Task, UpdateTask } from './types/task-tracker.interface';
-import { InjectModel } from '@nestjs/mongoose';
+import { UpdateTask } from './types/task-tracker.interface';
 import { RootFilterQuery, Types } from 'mongoose';
-import { Task as TaskModel } from './task-tracker.schema';
+import { TaskModel } from './task-tracker.model';
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types';
 import { getCurrentDate } from '../utils/getCurrentDate';
+import { InjectModel } from 'nestjs-typegoose';
 
 @Injectable()
 export class TaskTrackerService {
   constructor(
-    @InjectModel(TaskModel.name)
+    @InjectModel(TaskModel)
     private readonly taskModel: ModelType<TaskModel>,
   ) {}
 
@@ -54,7 +54,7 @@ export class TaskTrackerService {
     );
   }
 
-  async searchTasks(filter: string): Promise<Task[]> {
+  async searchTasks(filter: string): Promise<TaskModel[]> {
     const regex = new RegExp(filter, 'i');
     return this.taskModel
       .find({
@@ -82,7 +82,7 @@ export class TaskTrackerService {
     }
   }
 
-  async create(task: Task): Promise<DocumentType<TaskModel>> {
+  async create(task: TaskModel): Promise<DocumentType<TaskModel>> {
     task.createdAt = getCurrentDate().toISOString();
     return this.taskModel.create<DocumentType<TaskModel>>(task);
   }

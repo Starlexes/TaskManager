@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { TaskTrackerService } from './task-tracker.service';
-import { Task } from './task-tracker.schema';
+import { TaskModel } from './task-tracker.model';
 import { UpdateTask } from './types/task-tracker.interface';
 
 @Controller('tasks')
@@ -13,7 +13,7 @@ export class TaskTrackerController {
     @Query('limit') limit: number = 10,
     @Query('completed') completedParam?: string,
     @Query('today') todayParam?: string,
-  ): Promise<DocumentType<Task>[]> {
+  ): Promise<DocumentType<TaskModel>[]> {
     if (completedParam === 'true' || completedParam === 'false') {
       const completed = completedParam === 'true';
       return this.taskTrackerService.filterByCompleted(page, limit, completed);
@@ -39,7 +39,7 @@ export class TaskTrackerController {
   }
 
   @Post()
-  async create(@Body() task: Task) {
+  async create(@Body() task: TaskModel) {
     return this.taskTrackerService.create(task);
   }
 

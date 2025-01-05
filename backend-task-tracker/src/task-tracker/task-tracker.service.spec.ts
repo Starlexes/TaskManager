@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TaskTrackerService } from './task-tracker.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { INestApplication } from '@nestjs/common';
-import { taskSchema } from './task-tracker.schema';
+import { taskSchema } from './task-tracker.model';
 
 describe('TaskTrackerService', () => {
   let taskService: TaskTrackerService;

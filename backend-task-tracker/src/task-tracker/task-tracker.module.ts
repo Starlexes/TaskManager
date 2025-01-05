@@ -1,11 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TaskTrackerController } from './task-tracker.controller';
 import { TaskTrackerService } from './task-tracker.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Task, taskSchema } from './task-tracker.schema';
+import { TaskModel } from './task-tracker.model';
+import { TypegooseModule } from 'nestjs-typegoose';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Task.name, schema: taskSchema }])],
+  imports: [
+    TypegooseModule.forFeature([
+      {
+        typegooseClass: TaskModel,
+        schemaOptions: {
+          collection: 'Task',
+        },
+      },
+    ]),
+  ],
   controllers: [TaskTrackerController],
   providers: [TaskTrackerService],
 })
