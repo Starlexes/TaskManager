@@ -42,7 +42,9 @@ const storeOriginalCategory = () => {
 };
 const onBlur = () => {
   changeEditable();
+  taskCategory.value = taskCategory.value.toLowerCase();
   const category = taskCategory.value;
+
   if (category) {
     const data: Partial<Omit<Task, '_id'>> = {
       category,
