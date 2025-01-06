@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-relative tw-w-52">
+  <div class="tw-relative tw-min-w-52">
     <button class="tw-w-full tw-h-11" @click="isOpenMenu = !isOpenMenu">
       <div
         class="tw-w-full tw-h-full tw-inline-flex tw-items-center tw-justify-between tw-overflow-hidden tw-rounded-[10px] tw-bg-[var(--main-color)] hover:tw-bg-[var(--main-color-hovered)]"
@@ -20,7 +20,7 @@
       v-if="isOpenMenu"
     >
       <button
-        class="tw-block tw-text-start tw-w-full tw-font-bold tw-text-[var(--main-color)] tw-text-base tw-no-underline tw-px-[10px] tw-py-[6px] hover:tw-bg-[var(--hovered-secondary)] dark:hover:tw-bg-[var(--main-color-alpha)] dark:tw-text-white option-item"
+        class="tw-block tw-text-start tw-capitalize tw-w-full tw-font-bold tw-text-[var(--main-color)] tw-text-base tw-no-underline tw-px-[10px] tw-py-[6px] hover:tw-bg-[var(--hovered-secondary)] dark:hover:tw-bg-[var(--main-color-alpha)] dark:tw-text-white option-item"
         v-for="(option, idx) in options"
         :key="idx"
         @click="onClickOption(option)"
@@ -33,29 +33,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import FilterArrow from '@/icons/FilterArrow.vue';
 import { filterQueryParam } from '@/constants/filterQueryParam.constants';
 import { allTaskFilterName } from '@/constants/allTaskFilterName.constants';
 import { FilterOptions } from '@/types/FilterOptions.enum';
-import { getCapitalizedText } from '@/utils/getCapitalizedText';
 
 const route = useRoute();
 const router = useRouter();
 
-const selectedOption = ref<string>(
-  (route.query[filterQueryParam] as FilterOptions) || allTaskFilterName,
-);
+const selectedOption = ref<string>(allTaskFilterName);
 
 const isOpenMenu = ref<boolean>(false);
 
 const onClickOption = (option: string) => {
   isOpenMenu.value = false;
-  selectedOption.value = option.toLowerCase();
+  selectedOption.value = option;
   router.push({ query: { [filterQueryParam]: selectedOption.value } });
 };
-const options: string[] = [...Object.values(FilterOptions)].map((item) => getCapitalizedText(item));
+const options: string[] = [...Object.values(FilterOptions)];
+
+watch(
+  () => route.query[filterQueryParam],
+  (filter) => {
+    if (filter && options.includes(filter as string)) {
+      selectedOption.value = filter as string;
+    }
+  },
+);
 </script>
 
 <style scoped>
