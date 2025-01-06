@@ -8,7 +8,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 export class TaskTrackerController {
   constructor(private readonly taskTrackerService: TaskTrackerService) {}
   @Get()
-  async findTasks(
+  async get(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
     @Query('completed') completedParam?: string,
@@ -23,28 +23,28 @@ export class TaskTrackerController {
   }
 
   @Get('count')
-  async getCountTasks(@Query('completed') completed?: boolean) {
+  async count(@Query('completed') completed?: boolean) {
     const count = await this.taskTrackerService.getCountTasks(completed);
     return { data: count };
   }
 
   @Get('search')
-  async searchTasks(@Query('filter') filter: string) {
+  async search(@Query('filter') filter: string) {
     return this.taskTrackerService.searchTasks(filter);
   }
 
   @Get(':taskId')
-  async findTask(@Param('taskId') taskId: string) {
+  async find(@Param('taskId') taskId: string) {
     return this.taskTrackerService.findOne(taskId);
   }
 
-  @Post()
+  @Post('create')
   async create(@Body() task: TaskModel) {
     return this.taskTrackerService.create(task);
   }
 
   @Patch(':taskId')
-  async update(@Param('taskId') taskId: string, @Body() task: CreateTaskDto) {
+  async patch(@Param('taskId') taskId: string, @Body() task: CreateTaskDto) {
     return this.taskTrackerService.update(taskId, task);
   }
 
