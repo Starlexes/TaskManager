@@ -33,7 +33,7 @@ const onChange = (event: Event) => {
   if (data) {
     store.dispatch('searchTasks', data);
   } else {
-    store.dispatch('loadTasks', data);
+    store.dispatch('setTasks', data);
   }
 };
 </script>

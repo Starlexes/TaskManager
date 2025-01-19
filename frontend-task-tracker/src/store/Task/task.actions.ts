@@ -16,7 +16,7 @@ export const taskActions = {
     filter: string | string[] = '',
   ) => {
     const adaptedParams = adaptFilterParams(filter);
-    const tasks = await useGetTasks(state.page, state.limit, adaptedParams);
+    const tasks = await useGetTasks(adaptedParams, state.page, state.limit);
     commit('addTasks', tasks);
     dispatch('setPage', tasks.length);
   },
@@ -27,7 +27,7 @@ export const taskActions = {
   ) => {
     commit('clearPage');
     const adaptedParams = adaptFilterParams(filter);
-    const tasks = await useGetTasks(state.page, state.limit, adaptedParams);
+    const tasks = await useGetTasks(adaptedParams, state.page, state.limit);
 
     commit('setTasks', tasks);
     dispatch('setPage', tasks.length);
