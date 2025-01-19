@@ -1,7 +1,8 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-gap-10 main-layout">
+  <div class="tw-flex tw-flex-col tw-w-full tw-flex-1 tw-items-center tw-gap-10 main-layout">
     <TheHeader />
     <MainContent />
+    <TheFooter />
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import MainContent from './MainContent.vue';
 import { checkingTheme } from '../utils/checkingTheme';
 import { onMounted } from 'vue';
 import { useStore } from 'vuex';
+import TheFooter from './TheFooter.vue';
 const store = useStore();
 onMounted(() => {
   const theme = checkingTheme();
@@ -18,8 +20,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.main-layout {
-  max-width: 1200px;
-}
-</style>
+<style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="tw-flex-1">
     <TaskList />
   </main>
 </template>
