@@ -1,10 +1,10 @@
-import { locale, timezone } from 'src/constants/timeOptions';
+import { LOCALE, TIMEZONE } from 'src/constants/timeOptions';
 
 export const getCurrentDate = (): Date => {
   const now = new Date();
 
-  const formatter = new Intl.DateTimeFormat(locale, {
-    timeZone: timezone,
+  const formatter = new Intl.DateTimeFormat(LOCALE, {
+    timeZone: TIMEZONE,
     hour12: false,
     year: 'numeric',
     month: '2-digit',

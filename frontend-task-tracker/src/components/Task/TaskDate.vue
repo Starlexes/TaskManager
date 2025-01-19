@@ -8,7 +8,7 @@
     @update:model-value="onDayClick"
     :min-date="new Date()"
     :format="formatDate"
-    :placeholder="unspecifiedDate"
+    :placeholder="UNSPECIFIED_DATE"
     :dark="theme === 'dark'"
     :auto-apply="true"
     :enable-time-picker="false"
@@ -22,7 +22,7 @@ import { Store, useStore } from 'vuex';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-import { unspecifiedDate } from '@/constants/unspecifiedDate.constants';
+import { UNSPECIFIED_DATE } from '@/constants/unspecifiedDate.constants';
 
 const emit = defineEmits(['update-date']);
 const store = useStore<Store<State>>();
@@ -34,7 +34,7 @@ const props = defineProps({
   },
 });
 
-const taskFinishDate = ref<string | null>(props.taskFinishDate? props.taskFinishDate : null);
+const taskFinishDate = ref<string | null>(props.taskFinishDate ? props.taskFinishDate : null);
 
 const onDayClick = (day: string | null) => {
   if (day) {

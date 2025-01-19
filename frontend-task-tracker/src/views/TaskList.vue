@@ -2,17 +2,13 @@
   <div v-if="isLoading" class="tw-flex tw-flex-col tw-gap-8">
     <TaskSkeleton v-for="item in 4" :key="item" />
   </div>
+
   <template v-else>
     <p v-if="tasksLength === 0" class="tw-text-center tw-text-2xl not-found-message">
       Tasks was not found
     </p>
     <ul class="tw-flex tw-flex-col tw-gap-8 tw-items-center" v-else>
-      <TaskListItem
-        v-for="task in tasks"
-        :key="task._id"
-        :taskId="task._id"
-        :task="task as Omit<Task, '_id'>"
-      />
+      <TaskListItem v-for="task in tasks" :key="task._id" :taskId="task._id" :task="task" />
     </ul>
   </template>
 </template>
@@ -24,13 +20,13 @@ import TaskListItem from '@/components/Task/TaskListItem.vue';
 import TaskSkeleton from '@/components/Task/TaskSkeleton.vue';
 import type { Task } from '../types/Task.interface';
 import { useRoute } from 'vue-router';
-import { filterQueryParam } from '@/constants/filterQueryParam.constants';
+import { FILTER_QUERY_PARAM } from '@/constants/filterQueryParam.constants';
 
 const store = useStore();
 
 const route = useRoute();
 
-const filter = ref(route.query[filterQueryParam]);
+const filter = ref(route.query[FILTER_QUERY_PARAM]);
 
 const tasks = computed((): Task[] => store.getters.tasks);
 
@@ -61,7 +57,7 @@ onMounted(async () => {
 watch(
   () => route.query,
   async () => {
-    filter.value = route.query[filterQueryParam];
+    filter.value = route.query[FILTER_QUERY_PARAM];
     await onLoad();
   },
   { deep: true },

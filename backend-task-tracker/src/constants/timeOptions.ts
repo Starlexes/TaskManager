@@ -1,2 +1,2 @@
-export const timezone = 'Europe/Moscow';
-export const locale = 'ru-RU';
+export const TIMEZONE = 'Europe/Moscow';
+export const LOCALE = 'ru-RU';

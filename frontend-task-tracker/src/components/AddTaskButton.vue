@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { newTaskTitle, newTaskCategory } from '@/constants/newTaskData.constants';
+import { NEW_TASK_TITLE, NEW_TASK_CATEGORY } from '@/constants/newTaskData.constants';
 import ThePlus from '@/icons/ThePlus.vue';
 import type { Task } from '@/types/Task.interface';
 import { useStore } from 'vuex';
@@ -17,8 +17,8 @@ const store = useStore();
 
 const addNewTask = async () => {
   const newTask: Omit<Task, '_id'> = {
-    title: `${newTaskTitle}`,
-    category: newTaskCategory,
+    title: `${NEW_TASK_TITLE}`,
+    category: NEW_TASK_CATEGORY,
     completed: false,
   };
   store.dispatch('createTask', newTask);

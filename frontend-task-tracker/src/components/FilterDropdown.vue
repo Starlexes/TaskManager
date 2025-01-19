@@ -36,26 +36,26 @@
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import FilterArrow from '@/icons/FilterArrow.vue';
-import { filterQueryParam } from '@/constants/filterQueryParam.constants';
-import { allTaskFilterName } from '@/constants/allTaskFilterName.constants';
+import { FILTER_QUERY_PARAM } from '@/constants/filterQueryParam.constants';
+import { ALL_TASK_FILTER_NAME } from '@/constants/allTaskFilterName.constants';
 import { FilterOptions } from '@/types/FilterOptions.enum';
 
 const route = useRoute();
 const router = useRouter();
 
-const selectedOption = ref<string>(allTaskFilterName);
+const selectedOption = ref<string>(ALL_TASK_FILTER_NAME);
 
 const isOpenMenu = ref<boolean>(false);
 
 const onClickOption = (option: string) => {
   isOpenMenu.value = false;
   selectedOption.value = option;
-  router.push({ query: { [filterQueryParam]: selectedOption.value } });
+  router.push({ query: { [FILTER_QUERY_PARAM]: selectedOption.value } });
 };
 const options: string[] = [...Object.values(FilterOptions)];
 
 watch(
-  () => route.query[filterQueryParam],
+  () => route.query[FILTER_QUERY_PARAM],
   (filter) => {
     if (filter && options.includes(filter as string)) {
       selectedOption.value = filter as string;

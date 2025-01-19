@@ -1,1 +1,1 @@
-export const unspecifiedDate = 'Не указано';
+export const UNSPECIFIED_DATE = 'Не указано';

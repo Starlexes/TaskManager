@@ -1,4 +1,4 @@
-import { countTasksPerPage } from '@/constants/countTasksPerPage.constants';
+import { COUNT_TASKS_PER_PAGE } from '@/constants/countTasksPerPage.constants';
 
 import type { Task } from '@/types/Task.interface';
 import type { Theme } from '@/types/Theme.type';
@@ -24,7 +24,7 @@ export const store = createStore<State>({
     tasks: [],
     currentTheme: null,
     page: 1,
-    limit: countTasksPerPage,
+    limit: COUNT_TASKS_PER_PAGE,
     isLastPage: false,
     countTasks: 0,
     countCompletedTasks: 0,
