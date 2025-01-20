@@ -10,8 +10,8 @@ export class CreateTaskDto {
   @IsBoolean()
   public completed: boolean;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   public createdAt?: string;
 
   @IsOptional()

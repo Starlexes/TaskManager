@@ -1,29 +1,42 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseBoolPipe,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { TaskTrackerService } from './task-tracker.service';
 import { TaskModel } from './task-tracker.model';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { IdValidationPipe } from 'src/pipes/idValidation.pipe';
 
 @Controller('tasks')
 export class TaskTrackerController {
   constructor(private readonly taskTrackerService: TaskTrackerService) {}
   @Get()
   async get(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-    @Query('completed') completedParam?: string,
-    @Query('today') todayParam?: string,
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('completed', ParseBoolPipe) completedParam?: boolean,
+    @Query('today', ParseBoolPipe) todayParam?: boolean,
   ): Promise<DocumentType<TaskModel>[]> {
-    if (completedParam === 'true' || completedParam === 'false') {
-      const completed = completedParam === 'true';
-      return this.taskTrackerService.filterByCompleted(page, limit, completed);
-    } else if (todayParam === 'true') {
+    if (typeof completedParam === 'boolean') {
+      return this.taskTrackerService.filterByCompleted(page, limit, completedParam);
+    } else if (todayParam) {
       return this.taskTrackerService.filterWithTodayDate(page, limit);
     } else return this.taskTrackerService.findAll(page, limit);
   }
 
   @Get('count')
-  async count(@Query('completed') completed?: boolean) {
+  async count(@Query('completed', ParseBoolPipe) completed?: boolean) {
     const count = await this.taskTrackerService.getCountTasks(completed);
     return { data: count };
   }
@@ -34,22 +47,24 @@ export class TaskTrackerController {
   }
 
   @Get(':taskId')
-  async find(@Param('taskId') taskId: string) {
+  async find(@Param('taskId', IdValidationPipe) taskId: string) {
     return this.taskTrackerService.findOne(taskId);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('create')
-  async create(@Body() task: TaskModel) {
+  async create(@Body() task: CreateTaskDto) {
     return this.taskTrackerService.create(task);
   }
 
+  @UsePipes(new ValidationPipe())
   @Patch(':taskId')
-  async patch(@Param('taskId') taskId: string, @Body() task: CreateTaskDto) {
+  async patch(@Param('taskId', IdValidationPipe) taskId: string, @Body() task: CreateTaskDto) {
     return this.taskTrackerService.update(taskId, task);
   }
 
   @Delete(':taskId')
-  async delete(@Param('taskId') taskId: string) {
+  async delete(@Param('taskId', IdValidationPipe) taskId: string) {
     this.taskTrackerService.delete(taskId);
   }
 }
