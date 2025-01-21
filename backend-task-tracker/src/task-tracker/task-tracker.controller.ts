@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
@@ -21,22 +22,34 @@ import { IdValidationPipe } from 'src/pipes/idValidation.pipe';
 @Controller('tasks')
 export class TaskTrackerController {
   constructor(private readonly taskTrackerService: TaskTrackerService) {}
+
   @Get()
   async get(
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
-    @Query('completed', ParseBoolPipe) completedParam?: boolean,
-    @Query('today', ParseBoolPipe) todayParam?: boolean,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ): Promise<DocumentType<TaskModel>[]> {
-    if (typeof completedParam === 'boolean') {
-      return this.taskTrackerService.filterByCompleted(page, limit, completedParam);
-    } else if (todayParam) {
-      return this.taskTrackerService.filterWithTodayDate(page, limit);
-    } else return this.taskTrackerService.findAll(page, limit);
+    return this.taskTrackerService.findAll(page, limit);
+  }
+
+  @Get('completed')
+  async completed(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('completed', ParseBoolPipe) completedParam: boolean,
+  ) {
+    return this.taskTrackerService.filterByCompleted(page, limit, completedParam);
+  }
+
+  @Get('today')
+  async today(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return this.taskTrackerService.filterWithTodayDate(page, limit);
   }
 
   @Get('count')
-  async count(@Query('completed', ParseBoolPipe) completed?: boolean) {
+  async count(@Query('completed', new ParseBoolPipe({ optional: true })) completed?: boolean) {
     const count = await this.taskTrackerService.getCountTasks(completed);
     return { data: count };
   }
