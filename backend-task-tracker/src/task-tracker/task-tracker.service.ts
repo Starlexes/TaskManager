@@ -5,7 +5,7 @@ import { getCurrentDate } from '../utils/getCurrentDate';
 import { InjectModel } from 'nestjs-typegoose';
 import { TaskModel } from './task-tracker.model';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TASK_NOT_DELETED, TASK_NOT_FOUND } from './task-tracker.constants';
+import { TASK_NOT_FOUND } from './task-tracker.constants';
 
 @Injectable()
 export class TaskTrackerService {
@@ -99,10 +99,6 @@ export class TaskTrackerService {
   }
 
   async delete(taskId: string): Promise<DocumentType<TaskModel> | null> {
-    if (!Types.ObjectId.isValid(taskId)) {
-      throw new HttpException(TASK_NOT_DELETED, HttpStatus.BAD_REQUEST);
-    }
-
     return this.taskModel
       .findByIdAndDelete<DocumentType<TaskModel>>(new Types.ObjectId(taskId))
       .exec();
