@@ -4,6 +4,8 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   ParseBoolPipe,
   ParseIntPipe,
@@ -17,7 +19,8 @@ import { DocumentType } from '@typegoose/typegoose/lib/types';
 import { TaskTrackerService } from './task-tracker.service';
 import { TaskModel } from './task-tracker.model';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { IdValidationPipe } from 'src/pipes/idValidation.pipe';
+import { IdValidationPipe } from '../pipes/idValidation.pipe';
+import { TASK_NOT_FOUND } from './task-tracker.constants';
 
 @Controller('tasks')
 export class TaskTrackerController {
@@ -78,6 +81,9 @@ export class TaskTrackerController {
 
   @Delete(':taskId')
   async delete(@Param('taskId', IdValidationPipe) taskId: string) {
-    this.taskTrackerService.delete(taskId);
+    const deletedTask = await this.taskTrackerService.delete(taskId);
+    if (!deletedTask) {
+      throw new HttpException(TASK_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
   }
 }

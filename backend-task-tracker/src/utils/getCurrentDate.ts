@@ -1,4 +1,4 @@
-import { LOCALE, TIMEZONE } from 'src/constants/timeOptions';
+import { LOCALE, TIMEZONE } from '../constants/timeOptions';
 
 export const getCurrentDate = (): Date => {
   const now = new Date();

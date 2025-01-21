@@ -5,6 +5,7 @@ import { getCurrentDate } from '../utils/getCurrentDate';
 import { InjectModel } from 'nestjs-typegoose';
 import { TaskModel } from './task-tracker.model';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { TASK_NOT_DELETED, TASK_NOT_FOUND } from './task-tracker.constants';
 
 @Injectable()
 export class TaskTrackerService {
@@ -63,12 +64,12 @@ export class TaskTrackerService {
       .exec();
   }
 
-  async findOne(taskId: string): Promise<DocumentType<TaskModel>> {
-    const task = this.taskModel
-      .findOne<DocumentType<TaskModel>>({ _id: new Types.ObjectId(taskId) })
+  async findOne(taskId: string): Promise<DocumentType<TaskModel>[]> {
+    const task = await this.taskModel
+      .find<DocumentType<TaskModel>>({ _id: new Types.ObjectId(taskId) })
       .exec();
-    if (!task) {
-      throw new HttpException(`Задача с ID "${taskId}" не найдена`, HttpStatus.NOT_FOUND);
+    if (!task.length) {
+      throw new HttpException(TASK_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     return task;
   }
@@ -88,15 +89,20 @@ export class TaskTrackerService {
   }
 
   async update(taskId: string, task: CreateTaskDto): Promise<DocumentType<TaskModel>> {
-    return this.taskModel
+    const updatedTask = await this.taskModel
       .findByIdAndUpdate<DocumentType<TaskModel>>(taskId, task, { new: true })
       .exec();
+    if (!updatedTask) {
+      throw new HttpException(TASK_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    return updatedTask;
   }
 
   async delete(taskId: string): Promise<DocumentType<TaskModel> | null> {
     if (!Types.ObjectId.isValid(taskId)) {
-      throw new HttpException(`ID ${taskId} не корректен`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(TASK_NOT_DELETED, HttpStatus.BAD_REQUEST);
     }
+
     return this.taskModel
       .findByIdAndDelete<DocumentType<TaskModel>>(new Types.ObjectId(taskId))
       .exec();
