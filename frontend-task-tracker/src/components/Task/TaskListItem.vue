@@ -85,19 +85,21 @@ const onClickComplete = () => {
 };
 
 const updateTask = (data: Partial<Omit<Task, '_id'>>) => {
+  const newTask = { ...task.value, ...data };
+  task.value = newTask;
   const payload: UpdateTaskPayload = {
     taskId: taskId.value,
-    data: { ...task.value, ...data },
+    data: newTask,
   };
   store.dispatch('updateTask', payload);
 };
 
 const deleteTask = () => {
-  store.dispatch('deleteTasks', taskId.value);
-  if (task.value.completed) {
-    store.commit('decCountCompletedTasks');
-  }
-  store.commit('decCountTasks');
+  store.dispatch('deleteTasks', {
+    taskId: taskId.value,
+    title: task.value.title,
+    completed: task.value.completed,
+  });
 };
 </script>
 

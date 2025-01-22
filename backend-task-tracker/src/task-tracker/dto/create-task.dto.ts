@@ -1,20 +1,20 @@
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateTaskDto {
-  @IsString()
+  @IsString({ message: 'Неправильный формат данных у атрибута title' })
   public title: string;
 
-  @IsString()
+  @IsString({ message: 'Неправильный формат данных у атрибута category' })
   public category: string;
 
-  @IsBoolean()
+  @IsBoolean({ message: 'Неправильный формат данных у атрибута completed' })
   public completed: boolean;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Неправильный формат данных у атрибута createdAt' })
   public createdAt?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Неправильный формат данных у атрибута finishDate' })
   public finishDate?: string;
 }

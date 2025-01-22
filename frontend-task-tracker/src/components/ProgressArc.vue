@@ -16,6 +16,7 @@ import { useStore } from 'vuex';
 
 import ProgressBarStroke from '@/icons/ProgressBar/ProgressBarStroke.vue';
 import ProgressBarRing from '@/icons/ProgressBar/ProgressBarRing.vue';
+import { ALL_TASKS_COMPLETED } from '@/constants/toast.constants';
 
 const store = useStore();
 
@@ -40,7 +41,13 @@ const animateProgress = (value: number) => {
     strokeDasharray.value + Math.ceil((strokeDasharray.value * value) / 100);
 };
 
-watch(progress, (newValue) => animateProgress(newValue));
+watch(progress, (newValue) => {
+  animateProgress(newValue);
+
+  if (newValue === 100) {
+    store.dispatch('showSuccess', ALL_TASKS_COMPLETED);
+  }
+});
 
 onMounted(() => {
   animateProgress(progress.value);

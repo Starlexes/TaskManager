@@ -8,6 +8,7 @@ import { taskMutations } from './Task/task.mutations';
 import { pageActions } from './Page/page.actions';
 import { themeMutations } from './Theme/theme.mutations';
 import { pageMutations } from './Page/page.mutations';
+import { toastActions } from './Toast/toast.actions';
 
 export interface State {
   tasks: Task[];
@@ -31,7 +32,7 @@ export const store = createStore<State>({
   },
   mutations: { ...taskMutations, ...themeMutations, ...pageMutations },
 
-  actions: { ...taskActions, ...pageActions },
+  actions: { ...taskActions, ...pageActions, ...toastActions },
 
   getters: {
     tasks: (state): Task[] => state.tasks,

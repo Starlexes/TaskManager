@@ -9,6 +9,7 @@ import type { UpdateTaskPayload } from '@/types/UpdateTaskPayload.interface';
 import { useGetCountTasks } from '@/hooks/useGetCountTasks';
 import adaptFilterParams from '@/utils/adaptFilterParams';
 import type { State } from '../index';
+import { getDeleteTaskMessage } from '@/constants/toast.constants';
 
 export const taskActions = {
   loadTasks: async (
@@ -73,10 +74,18 @@ export const taskActions = {
     }
   },
 
-  deleteTasks: async ({ commit }: ActionContext<State, State>, taskId: Task['_id']) => {
+  deleteTasks: async (
+    { commit, dispatch }: ActionContext<State, State>,
+    { taskId, title, completed }: { taskId: Task['_id']; title: string; completed: boolean },
+  ) => {
     const response = await useDeleteTask(taskId);
     if (response === 200) {
       commit('deleteTask', taskId);
+      dispatch('showSuccess', getDeleteTaskMessage(title));
+      if (completed) {
+        commit('decCountCompletedTasks');
+      }
+      commit('decCountTasks');
     }
   },
 };
